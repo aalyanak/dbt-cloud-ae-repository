@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: tier2_curated__user
+    config:
+      materialized: table
+    columns: 
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+  - name: tier2_curated__user_conversion
+    config:
+      materialized: table
+    columns: 
+      - name: user_id
+        tests:
+          - unique
+          - not_null

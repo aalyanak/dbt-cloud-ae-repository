@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: tier3_consumption__user
+    config:
+      materialized: table
+    columns: 
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+  - name: tier3_consumption__user_conversion
+    config:
+      materialized: table
+    columns: 
+      - name: user_id
+        tests:
+          - unique
+          - not_null
