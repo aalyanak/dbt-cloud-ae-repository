@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: tier1_raw__user
+    config:
+      materialized: table
+    columns: 
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+
+  - name: tier1_raw__channel
+    config:
+      materialized: table
+    columns: 
+      - name: channel_name
+        tests:
+          - unique
+          - not_null
+          - accepted_values:
+              values:
+                - paid_click
+                - paid_impression
+                - organic_click
+                - direct
+                - other
+
+  - name: tier1_raw__user_session
+    config:
+      materialized: table
+    columns: 
+      - name: user_session_gid
+        tests:
+          - unique
+          - not_null
+
+  - name: tier1_raw__user_conversion
+    config:
+      materialized: table
+    columns: 
+      - name: user_gid
+        tests:
+          - unique
+          - not_null
+  
+  - name: tier1_raw__user_conversion_paid_live_session
+    config:
+      materialized: table
+    columns: 
+      - name: user_gid
+        tests:
+          - unique
+          - not_null
+  
+  - name: tier1_raw__user_conversion_organic_live_session
+    config:
+      materialized: table
+    columns: 
+      - name: user_gid
+        tests:
+          - unique
+          - not_null
+  
+  - name: tier1_raw__user_conversion_without_live_session
+    config:
+      materialized: table
+    columns: 
+      - name: user_gid
+        tests:
+          - unique
+          - not_null
