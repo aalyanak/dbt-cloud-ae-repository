@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: sources
+    database: analytics-engineering-398318 
+    schema: ae_sources
+    tables:
+      - name: sessions
+        loaded_at_field: _PARTITIONTIME
+        freshness:
+          warn_after: {count: 24, period: hour}
+      - name: conversions
+        loaded_at_field: _PARTITIONTIME
+        freshness:
+          warn_after: {count: 24, period: hour}
+
+models:
+  - name: stg_sources__conversions
+    config:
+      materialized: ephemeral
+  - name: stg_sources__sessions
+    config:
+      materialized: ephemeral

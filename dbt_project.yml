@@ -6,6 +6,15 @@ name: 'my_new_project'
 version: '1.0.0'
 config-version: 2
 
+# This setting configures for multiple use variables
+vars:
+  # Conversion channel names
+  paid_click: "paid_click"
+  paid_impression: "paid_impression"
+  organic_click: "organic_click"
+  direct: "direct"
+  other: "other"
+
 # This setting configures which "profile" dbt uses for this project.
 profile: 'default'
 
@@ -28,11 +37,19 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
-# In this example config, we tell dbt to build all models in the example/ directory
-# as tables. These settings can be overridden in the individual model files
-# using the `{{ config(...) }}` macro.
+seeds:
+  +schema: sources
+  
 models:
-  my_new_project:
-    # Applies to all files under models/example/
-    example:
-      materialized: view
+  staging:
+    +schema: sources
+    materialized: ephemeral
+  tier1_raw:
+    +schema: tier1_raw
+    materialized: table
+  tier2_curated:
+    +schema: tier2_curated
+    materialized: table
+  tier3_consumption:
+    +schema: tier3_consumption
+    materialized: table

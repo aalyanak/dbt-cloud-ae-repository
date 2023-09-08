@@ -1,0 +1,6 @@
+channel_name,channel_prio,channel_lifespan
+paid_impression,1,1
+paid_search,1,3
+organic_search,2,12
+direct,3,
+other,4,
