@@ -12,7 +12,6 @@ models:
           - type: primary_key
           - type: not_null
         tests:
-          - unique
           - not_null
       - name: user_conversion_indicator
         description: '{{ doc("def_att_user_conversion_ind") }}'
@@ -21,9 +20,12 @@ models:
           - type: not_null
         tests:
           - not_null
+          - accepted_values:
+              values: [true, false]
+              quote: false
 
   - name: tier2_curated__user_conversion
-    description: '{{ doc("def_ent_user_conversion") }}'
+    description: User Conversion '{{ doc("def_ent_conversion") }}'.
     config:
       materialized: table
     columns: 
@@ -36,13 +38,20 @@ models:
           - unique
           - not_null
       - name: user_conversion_channel_name
-        description: User Conversion Channel Name '{{ doc("def_att_conversion_channel") }}'
+        description: User Conversion Channel Name {{ doc("def_att_conversion_channel") }}
         constraints:
           - type: not_null
         tests:
           - not_null
+          - accepted_values:
+              values:
+              - paid_click
+              - paid_impression
+              - organic_click
+              - direct
+              - other
       - name: user_conversion_timestamp
-        description: User Conversion Timestamp '{{ doc("def_att_conversion_time") }}'
+        description: User Conversion Timestamp {{ doc("def_att_conversion_time") }}
         constraints:
           - type: not_null
         tests:

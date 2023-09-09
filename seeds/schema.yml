@@ -1,6 +1,6 @@
 seeds:
   - name: channel_seed
-    description: Channel Seed is a mapping document of conversion channel names, their prioritization in conversation strategy and lifespan of channels (if applicable).
+    description: Channel Seed {{ doc("def_ent_channel") }}
     columns:
       - name: channel_name
         constraints:
