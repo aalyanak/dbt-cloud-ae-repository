@@ -5,6 +5,9 @@ models:
     description: '{{ doc("def_ent_user") }}'
     config:
       materialized: table
+    tests:
+      - unique:
+          column_name: "(user_id || '-' || user_conversion_indicator)"
     columns: 
       - name: user_id
         description: '{{ doc("def_att_user_id") }}'

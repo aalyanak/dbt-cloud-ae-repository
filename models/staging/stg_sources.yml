@@ -51,6 +51,9 @@ models:
     description: This {{ doc("def_staging_entity") }} sessions.
     config:
       materialized: ephemeral
+    tests:
+      - unique:
+          column_name: "(user_id || '-' || time_started)"
     columns:
       - name: user_id
         data_type: INT64

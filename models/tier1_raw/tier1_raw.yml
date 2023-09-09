@@ -5,6 +5,9 @@ models:
     description: '{{ doc("def_ent_user") }}'
     config:
       materialized: table
+    tests:
+      - unique:
+          column_name: "(user_id || '-' || user_conversion_indicator)"
     columns: 
       - name: user_gid
         description: '{{ doc("def_att_user_gid") }}'
@@ -59,6 +62,9 @@ models:
     description: User Session {{ doc("def_ent_session") }}
     config:
       materialized: table
+    tests:
+      - unique:
+          column_name: "(TO_BASE64(user_gid) || '-' || cast(user_session_start_timestamp as string))"
     columns: 
       - name: user_session_gid
         description: '{{ doc("def_att_user_session_gid") }}'
