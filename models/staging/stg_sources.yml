@@ -6,18 +6,79 @@ sources:
     schema: ae_sources
     tables:
       - name: sessions
+        description: Sessions {{ doc("def_source_data") }}
+        tags: 
+          - source
+          - session
         loaded_at_field: _PARTITIONTIME
         freshness:
           warn_after: {count: 24, period: hour}
+        
       - name: conversions
+        description: Conversions {{ doc("def_source_data") }}
+        tags: 
+          - source
+          - conversion
         loaded_at_field: _PARTITIONTIME
         freshness:
           warn_after: {count: 24, period: hour}
 
 models:
   - name: stg_sources__conversions
+    description: This {{ doc("def_staging_entity") }} conversions.
     config:
       materialized: ephemeral
+    columns:
+      - name: user_id
+        description: '{{ doc("def_att_user_id") }}'
+        data_type: INT64
+        constraints:
+          - type: primary_key
+          - type: not_null
+          - type: unique
+        tests:
+          - unique
+          - not_null
+      - name: registration_time
+        description: Registration time {{ doc("def_att_conversion_time") }}
+        data_type: TIMESTAMP
+        constraints:
+          - type: not_null
+        tests:
+          - not_null
+ 
   - name: stg_sources__sessions
+    description: This {{ doc("def_staging_entity") }} sessions.
     config:
       materialized: ephemeral
+    columns:
+      - name: user_id
+        data_type: INT64
+        description: '{{ doc("def_att_user_id") }}'
+        constraints:
+          - type: primary_key
+          - type: not_null
+        tests:
+          - not_null
+      - name: time_started
+        data_type: TIMESTAMP
+        description: Time Started {{ doc("def_att_session_start_time") }}
+        constraints:
+          - type: primary_key
+          - type: not_null
+        tests:
+          - not_null
+      - name: is_paid
+        data_type: BOOL
+        description: The indicator which states if medium which initiated the session is paid or not.
+        constraints:
+          - type: not_null
+        tests:
+          - not_null
+      - name: medium
+        data_type: STRING
+        description: A medium is a system or channel through which a user initiated a session. 
+        constraints:
+          - type: not_null
+        tests:
+          - not_null
