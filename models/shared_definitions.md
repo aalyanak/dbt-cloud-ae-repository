@@ -48,6 +48,10 @@ is the time when the conversion is happened.
 is the name of the channel which is the winner for the conversion.
 {% enddocs %}
 
+{% docs user_conversion_via_session_ind %}
+User Conversion via Session indicator indicates whether or not a User is conversion is initiated by a session (live or non-live).
+{% enddocs %}
+
 {% docs def_att_user_session_gid %}
 A User Session Gid is the generated surrogate key for a User Session. It's a composite key of User Gid and User Session Start Time.
 {% enddocs %}

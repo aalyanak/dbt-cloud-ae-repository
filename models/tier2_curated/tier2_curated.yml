@@ -28,9 +28,12 @@ models:
               quote: false
 
   - name: tier2_curated__user_conversion
-    description: User Conversion '{{ doc("def_ent_conversion") }}'.
+    description: User Conversion {{ doc("def_ent_conversion") }}.
     config:
       materialized: table
+    tests:
+      - unique:
+          column_name: "(user_id || '-' || user_conversion_indicator)"
     columns: 
       - name: user_id
         description: '{{ doc("def_att_user_id") }}'
@@ -38,8 +41,17 @@ models:
           - type: primary_key
           - type: not_null
         tests:
-          - unique
           - not_null
+      - name: user_conversion_indicator
+        description: '{{ doc("def_att_user_conversion_ind") }}'
+        constraints:
+          - type: primary_key
+          - type: not_null
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+              quote: false
       - name: user_conversion_channel_name
         description: User Conversion Channel Name {{ doc("def_att_conversion_channel") }}
         constraints:
@@ -59,3 +71,12 @@ models:
           - type: not_null
         tests:
           - not_null
+      - name: user_conversion_via_session_indicator
+        description: '{{ doc("user_conversion_via_session_ind") }}'
+        constraints:
+          - type: not_null
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+              quote: false
