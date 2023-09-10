@@ -11,6 +11,15 @@ A three-tier data model is designed with following specifications to host the Us
 - **Tier2 (Integrated/Curated Layer):** This tier creates consumable data sets according to the business rules and definitions. Any calculation or pivoting can also be done on this layer, up to the curation is finalized, supporting entities can also be included.
 - **Tier3 (Ready for Reporting/Consumption Layer):** This layer is the final layer of the model, which contains the production quality data and ready to be sent/connected to the target application.
 
+#### Technologies used:
+* DBT Cloud (version: 1.6.0) 
+* GitHub integration
+* GCP BigQuery integration (can also be integrated to other databases)
+
+#### To run the project on DBT Cloud:
+- **dbt build** (or dbt seed + dbt test + dbt run) to regenerate the entire model
+- **dbt docs generate** to regenerate the documentation
+
 #### To reproduce the results via a different dataset:
 Please change the "sources" configuration in [*models/staging/stg_sources.yml*](https://github.com/aalyanak/dbt-cloud-ae-repository/blob/main/models/staging/stg_sources.yml)  file.
 
@@ -29,10 +38,6 @@ tables:
 #### The locations of DRY (don't repeat yourself) code source files:
 - In [*dbt_project.yml*](https://github.com/aalyanak/dbt-cloud-ae-repository/blob/main/dbt_project.yml) file, you can find the variables used in models.
 - In [*models/shared_definitions.md*](https://github.com/aalyanak/dbt-cloud-ae-repository/blob/main/models/shared_definitions.md) file, you can find the code blocks of shared definitions used in yml files.
-
-Try running the following commands:
-- **dbt build** (or dbt seed + dbt test + dbt run) to regenerate the entire model
-- **dbt docs generate** to regenerate the documentation
 
 ### Resources:
 - GitHub link of this repository: [click](https://github.com/aalyanak/dbt-cloud-ae-repository/tree/main)
