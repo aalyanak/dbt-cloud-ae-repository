@@ -43,7 +43,7 @@ models:
         tests:
           - not_null
       - name: user_conversion_indicator
-        description: '{{ doc("def_att_user_conversion_ind") }}'
+        description: .'{{ doc("def_att_user_conversion_ind") }}' This attribute is always True, as this is a subtype entity of User, for converted users.
         constraints:
           - type: primary_key
           - type: not_null

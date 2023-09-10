@@ -34,7 +34,7 @@ live_session_channel AS (
 ),
 
 user_conversion_all as (
-    select * from live_session_channel
+    select * from live_session_channel lsc
     union all
     select * from wo_live_session
 ),
@@ -42,12 +42,18 @@ user_conversion_all as (
 user_conversion_final as (
     select 
         u.user_id,
+        u.user_conversion_indicator,
         c.channel_name as user_conversion_channel_name,
-        uc.user_conversion_timestamp
+        uc.user_conversion_timestamp,
+        CASE 
+        WHEN uca.user_session_gid is not null then True
+        ELSE False
+        END user_conversion_via_session_indicator
     from user_conversion_all uca
     inner join users u on uca.user_gid = u.user_gid
     inner join user_conversion uc on uca.user_gid=uc.user_gid
     inner join channel c on uca.user_conversion_channel_gid = c.channel_gid
+    where u.user_conversion_indicator = True
 )
 
 select * from user_conversion_final

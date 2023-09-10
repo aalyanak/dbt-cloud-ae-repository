@@ -59,7 +59,7 @@ models:
         description: Channel Lifespan Duration is the duration of lifespan (in hours) of the session in conversion strategy, depends on the channel.
 
   - name: tier1_raw__user_session
-    description: User Session {{ doc("def_ent_session") }}
+    description: User Session {{ doc("def_ent_session") }} {{ doc("def_udp_channel_classification") }}
     config:
       materialized: table
     tests:
