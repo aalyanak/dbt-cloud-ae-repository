@@ -2,71 +2,221 @@ version: 2
 
 models:
   - name: tier1_raw__user
+    description: '{{ doc("def_ent_user") }}'
     config:
       materialized: table
+    tests:
+      - unique:
+          column_name: "(user_id || '-' || user_conversion_indicator)"
     columns: 
-      - name: user_id
+      - name: user_gid
+        description: '{{ doc("def_att_user_gid") }}'
+        constraints:
+          - type: primary_key
+          - type: unique
+          - type: not_null
         tests:
           - unique
           - not_null
-
-  - name: tier1_raw__channel
-    config:
-      materialized: table
-    columns: 
-      - name: channel_name
+      - name: user_id
+        description: '{{ doc("def_att_user_id") }}'
+        constraints:
+          - type: not_null
         tests:
-          - unique
+          - not_null
+      - name: user_conversion_indicator
+        description: '{{ doc("def_att_user_conversion_ind") }}'
+        constraints:
+          - type: not_null
+        tests:
           - not_null
           - accepted_values:
-              values:
-                - paid_click
-                - paid_impression
-                - organic_click
-                - direct
-                - other
+              values: [true, false]
+              quote: false
+
+  - name: tier1_raw__channel
+    description: Channel {{ doc("def_ent_channel") }}
+    config:
+      materialized: table
+    columns: 
+      - name: channel_gid
+        description: '{{ doc("def_att_channel_gid") }}'
+        constraints:
+          - type: primary_key
+          - type: unique
+          - type: not_null
+        tests:
+          - unique
+          - not_null
+      - name: channel_name
+        description: '{{ doc("def_att_channel_name") }}'
+        tests:
+          - unique
+          - not_null
+      - name: channel_priority_number
+        description: Channel Priority Number is {{ doc("def_udp_channel_prio") }}
+      - name: channel_lifespan_duration
+        description: Channel Lifespan Duration is the duration of lifespan (in hours) of the session in conversion strategy, depends on the channel.
 
   - name: tier1_raw__user_session
+    description: User Session {{ doc("def_ent_session") }} {{ doc("def_udp_channel_classification") }}
     config:
       materialized: table
+    tests:
+      - unique:
+          column_name: "(TO_BASE64(user_gid) || '-' || cast(user_session_start_timestamp as string))"
     columns: 
       - name: user_session_gid
+        description: '{{ doc("def_att_user_session_gid") }}'
+        constraints:
+          - type: primary_key
+          - type: unique
+          - type: not_null
         tests:
-          - unique
-          - not_null
+        - unique
+        - not_null
+      - name: user_gid
+        description: '{{ doc("def_att_user_gid") }}'
+        constraints:
+          - type: foreign_key
+          - type: not_null
+        tests:
+        - not_null
+        - relationships:
+              to: ref('tier1_raw__user')
+              field: user_gid
+      - name: user_session_start_timestamp
+        description: A User Session Start Timestamp {{ doc("def_att_session_start_time") }}
+        constraints:
+          - type: not_null
+        tests:
+        - not_null
+      - name: user_session_end_timestamp
+        description: A User Session End Timestamp {{ doc("def_att_session_end_time") }}
+      - name: user_session_channel_gid
+        description: A User Session {{ doc("def_att_channel_gid") }}
+        constraints:
+        - type: foreign_key
+        - type: not_null
+        tests:
+        - not_null
+        - relationships:
+              to: ref('channel')
+              field: channel_gid
+
 
   - name: tier1_raw__user_conversion
+    description: User Conversion {{ doc("def_ent_conversion") }}.
     config:
       materialized: table
     columns: 
       - name: user_gid
+        description: '{{ doc("def_att_user_gid") }}'
+        constraints:
+          - type: foreign_key
+          - type: primary_key
+          - type: unique
+          - type: not_null
         tests:
-          - unique
+        - unique
+        - not_null
+        - relationships:
+              to: ref('tier1_raw__user')
+              field: user_gid
+      - name: user_conversion_timestamp
+        description: User Conversion Timestamp {{ doc("def_att_conversion_time") }}
+        constraints:
+          - type: not_null
+        tests:
           - not_null
-  
+
   - name: tier1_raw__user_conversion_paid_live_session
+    description: User Conversion Paid Live Session {{ doc("def_ent_conversion") }} via a Paid Live Session.
     config:
       materialized: table
     columns: 
       - name: user_gid
+        description: '{{ doc("def_att_user_gid") }}'
+        constraints:
+          - type: primary_key
+          - type: foreign_key
+          - type: unique
+          - type: not_null
         tests:
-          - unique
-          - not_null
+        - unique
+        - not_null
+        - relationships:
+              to: ref('tier1_raw__user_conversion')
+              field: user_gid
+      - name: user_session_gid
+        description: '{{ doc("def_att_user_session_gid") }}'
+        constraints:
+          - type: foreign_key
+          - type: not_null
+        tests:
+        - not_null
+        - relationships:
+              to: ref('tier1_raw__user_session')
+              field: user_session_gid
   
   - name: tier1_raw__user_conversion_organic_live_session
+    description: User Conversion Organic Live Session {{ doc("def_ent_conversion") }} via an Organic Live Session, and not hijacked by a Paid Live Session.
     config:
       materialized: table
     columns: 
       - name: user_gid
+        description: '{{ doc("def_att_user_gid") }}'
+        constraints:
+          - type: primary_key
+          - type: foreign_key
+          - type: unique
+          - type: not_null
         tests:
-          - unique
-          - not_null
+        - unique
+        - not_null
+        - relationships:
+              to: ref('tier1_raw__user_conversion')
+              field: user_gid
+      - name: user_session_gid
+        description: '{{ doc("def_att_user_session_gid") }}'
+        constraints:
+          - type: foreign_key
+          - type: not_null
+        tests:
+        - not_null
+        - relationships:
+              to: ref('tier1_raw__user_session')
+              field: user_session_gid
   
   - name: tier1_raw__user_conversion_without_live_session
+    description: User Conversion Without Live Session {{ doc("def_ent_conversion") }}, not via any paid or organic live session.
     config:
       materialized: table
     columns: 
       - name: user_gid
+        description: '{{ doc("def_att_user_gid") }}'
+        constraints:
+          - type: primary_key
+          - type: foreign_key
+          - type: unique
+          - type: not_null
         tests:
-          - unique
-          - not_null
+        - unique
+        - not_null
+        - relationships:
+              to: ref('tier1_raw__user_conversion')
+              field: user_gid
+      - name: user_session_gid
+        description: .{{ doc("def_att_user_session_gid") }} This attribute is nullable in case the conversion cannot be initiated to any User Session. 
+        constraints:
+          - type: foreign_key
+      - name: user_conversion_channel_gid
+        description: A User Conversion {{ doc("def_att_channel_gid") }} This attribute is always maps the channel 'other' if there's no User Session initiated.
+        constraints:
+        - type: foreign_key
+        - type: not_null
+        tests:
+        - not_null
+        - relationships:
+              to: ref('channel')
+              field: channel_gid

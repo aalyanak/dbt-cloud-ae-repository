@@ -2,7 +2,7 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'my_new_project'
+name: 'ae_project'
 version: '1.0.0'
 config-version: 2
 
@@ -44,12 +44,16 @@ models:
   staging:
     +schema: sources
     materialized: ephemeral
+    +tags: ['staging']
   tier1_raw:
     +schema: tier1_raw
     materialized: table
+    +tags: ['tier1_raw','tier1', 'raw', 'data_layer']
   tier2_curated:
     +schema: tier2_curated
     materialized: table
+    +tags: ['tier2_curated','tier2', 'integration', 'curated']
   tier3_consumption:
     +schema: tier3_consumption
     materialized: table
+    +tags: ['tier3_consumption','tier3', 'ready_for_reporting', 'consumption']

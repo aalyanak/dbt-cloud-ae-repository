@@ -1,0 +1,17 @@
+seeds:
+  - name: channel_seed
+    description: Channel Seed {{ doc("def_ent_channel") }}
+    columns:
+      - name: channel_name
+        constraints:
+          - type: primary_key
+          - type: not_null
+          - type: unique
+        description: Channel Name {{ doc("def_att_conversion_channel") }}
+        tests:
+          - unique
+          - not_null
+      - name: channel_prio
+        description: Channel Prio is {{ doc("def_udp_channel_prio") }}
+      - name: channel_lifespan
+        description: Channel Lifespan is the duration of lifespan (in hours) of the session in conversion strategy, depends on the channel.
