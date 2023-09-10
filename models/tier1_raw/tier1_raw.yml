@@ -106,7 +106,7 @@ models:
 
 
   - name: tier1_raw__user_conversion
-    description: User Conversion {{ doc("def_ent_conversion") }}.
+    description: User Conversion {{ doc("def_ent_conversion") }}. This entity is designed to have multiple subtypes per conversion type. The reason of this approach is to have a cleaner and understandable code with splitted up entities for conversions, and also to be able to broaden the logic with another type of channel prio if there's a new strategy in the future. 
     config:
       materialized: table
     columns: 
